@@ -5,19 +5,15 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
      public SpawnManager spawnManager;
-     float moveSpeed = 7f;
-     float runSpeed = 5f;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+     public PizzaManager pizzaManager;
+     GameObject lastShop;
+     GameObject lastHome;
+     float horizontalSpeed = 7f;
+     float verticalSpeed = 5f;
+   
     void Update()
     {
-        float xMovement = Input.GetAxis("Horizontal");
-        transform.Translate(new Vector3(xMovement * moveSpeed, 0, runSpeed) * Time.deltaTime);
+        MoveForward();
     }
 
 	private void OnTriggerEnter(Collider other)
@@ -26,5 +22,47 @@ public class PlayerController : MonoBehaviour
 		{
             spawnManager.MoveRoad();
 		}
-	}
+
+		else if (other.gameObject.CompareTag("SlowZone"))
+		{
+            SlowDown();
+        }
+
+        else if (other.gameObject.CompareTag("PizzaShop") && lastShop != other.gameObject)
+		{
+            lastShop = other.gameObject;
+            pizzaManager.GetPizza();
+        }
+
+		else if (other.gameObject.CompareTag("TargetHouse") && lastHome != other.gameObject)
+        {
+            lastHome = other.gameObject;
+            pizzaManager.DeliverPizza();
+		}
+
+    }
+
+	private void OnTriggerExit(Collider other)
+	{
+        if (other.gameObject.CompareTag("SlowZone"))
+        {
+            Accelerate();
+        }
+    }
+
+    void MoveForward()
+    {
+        float xMovement = Input.GetAxis("Horizontal");
+        transform.Translate(new Vector3(xMovement * horizontalSpeed, 0, verticalSpeed) * Time.deltaTime);
+    }
+    void SlowDown()
+    {
+        horizontalSpeed = 3.5f;
+        verticalSpeed = 2.5f;
+    }
+    void Accelerate()
+    {
+        horizontalSpeed = 7f;
+        verticalSpeed = 5f;
+    }
 }
