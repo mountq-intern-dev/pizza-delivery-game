@@ -5,39 +5,69 @@ using UnityEngine;
 public class PlaneSpawner : MonoBehaviour
 {
     public List<GameObject> plots;
+    Queue<GameObject> createdPlots = new Queue<GameObject>();
     float plotSize = 18f;
     float lastZPos = 0f;
     float xPosR = 15f;
-    int startPlotAmnt = 5;
+    int startPlotAmnt = 8;
 
 
 
     void Start()
     {
+
 		for (int i = 0; i < startPlotAmnt; i++)
 		{
-            SpawnFullPlots();
+            SpawnBothPlots(1);
         }
     }
 
 
-    void SpawnSinglePlot()
+    void SpawnLeftPlot()
     {
-        GameObject rightPlot = plots[Random.Range(0, plots.Count)];
-        GameObject leftPlot = plots[Random.Range(0, plots.Count)];
 
-        Instantiate(rightPlot, new Vector3(xPosR, 0, lastZPos), new Quaternion(0, 180, 0, 0));
-        Instantiate(leftPlot, new Vector3(-xPosR, 0, lastZPos), new Quaternion(0, 0, 0, 0));
+        GameObject leftPlot = ObjectPool.instance.GetHouseInPool();
 
-
-        lastZPos += plotSize;
-    }
-
-    public void SpawnFullPlots()
-    {
-		for (int i = 0; i < 2; i++)
+		if (leftPlot != null )
 		{
-            SpawnSinglePlot();
+            createdPlots.Enqueue(leftPlot);
+            leftPlot.SetActive(true);
+
+            leftPlot.transform.position = new Vector3(-xPosR, 0, lastZPos);
+            leftPlot.transform.rotation = new Quaternion(0, 0, 0, 0);
         }
+    }
+
+    void SpawnRightPlot()
+    {
+        GameObject rightPlot = ObjectPool.instance.GetHouseInPool();
+
+        if  (rightPlot != null)
+        {
+            createdPlots.Enqueue(rightPlot);
+            rightPlot.SetActive(true);
+
+            rightPlot.transform.position = new Vector3(xPosR, 0, lastZPos);
+            rightPlot.transform.rotation = new Quaternion(0, 180, 0, 0);
+        }
+    }
+
+    public void SpawnBothPlots(int amnt)
+    {
+		for (int i = 0; i < amnt; i++)
+		{
+            SpawnLeftPlot();
+            SpawnRightPlot();
+            lastZPos += plotSize;
+        }   
+    }
+
+    public void DestroyPlots(int amnt)
+    {
+		for (int i = 0; i < amnt; i++)
+		{
+            createdPlots.Dequeue().SetActive(false);
+            createdPlots.Dequeue().SetActive(false);
+        }   
     }
 }

@@ -7,6 +7,7 @@ public class SpawnManager : MonoBehaviour
     PlaneSpawner planeSpawner;
     public List<GameObject> roadParts;
     float roadLen = 36f;
+    int triggerTime = 1;
 
 	private void Start()
 	{
@@ -16,8 +17,14 @@ public class SpawnManager : MonoBehaviour
 	public void TriggerSpawns()
     {
         MoveRoad();
-        planeSpawner.SpawnFullPlots();
-
+        planeSpawner.SpawnBothPlots(2);
+        triggerTime++;
+		if (triggerTime > 3)
+		{
+            
+            planeSpawner.DestroyPlots(2);
+		}
+        
 
     }
     private void MoveRoad()

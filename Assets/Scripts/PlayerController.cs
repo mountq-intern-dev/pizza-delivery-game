@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
      GameObject lastShop;
      GameObject lastHome;
      float horizontalSpeed = 7f;
-     float verticalSpeed = 5f;
+     float verticalSpeed = 8f;
    
     void Update()
     {
