@@ -4,10 +4,23 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    PlaneSpawner planeSpawner;
     public List<GameObject> roadParts;
     float roadLen = 36f;
 
-    public void MoveRoad()
+	private void Start()
+	{
+        planeSpawner = GetComponent<PlaneSpawner>();
+	}
+
+	public void TriggerSpawns()
+    {
+        MoveRoad();
+        planeSpawner.SpawnFullPlots();
+
+
+    }
+    private void MoveRoad()
     {
        
         GameObject oldRoad = roadParts[0];

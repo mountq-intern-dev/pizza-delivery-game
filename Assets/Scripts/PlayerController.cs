@@ -20,7 +20,8 @@ public class PlayerController : MonoBehaviour
 	{
 		if (other.gameObject.CompareTag("SpawnTrigger"))
 		{
-            spawnManager.MoveRoad();
+            spawnManager.TriggerSpawns();
+
 		}
 
 		else if (other.gameObject.CompareTag("SlowZone"))
