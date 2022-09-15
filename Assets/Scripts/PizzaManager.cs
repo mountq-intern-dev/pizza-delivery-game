@@ -6,9 +6,12 @@ public class PizzaManager : MonoBehaviour
 {
     Stack<GameObject> pizzasOnCar = new Stack<GameObject>();
     int pizzaCount = 0;
+    int donePizza = 0;
     float pizzaLength = 0.04f;
     Transform pizzaLocation;
     public GameObject pizzaPrefab;
+    public UIManager uIManager;
+    public ParticleManager particleManager;
 	void Start()
     {
         pizzaLocation = GameObject.FindGameObjectWithTag("Player").transform.GetChild(0);
@@ -20,6 +23,8 @@ public class PizzaManager : MonoBehaviour
     {
         SpawnPizza();
         pizzaCount++;
+        uIManager.UpdatePizza(pizzaCount);
+        particleManager.PizzaParticle();
     }
 
     public void DeliverPizza()
@@ -27,9 +32,13 @@ public class PizzaManager : MonoBehaviour
         
 		if (pizzaCount > 0)
 		{
+            donePizza++;
             GameObject pizzaToRemove = pizzasOnCar.Pop();
             pizzaToRemove.SetActive(false);
             pizzaCount--;
+            uIManager.UpdatePizza(pizzaCount);
+            uIManager.UpdateDonePizza(donePizza);
+            particleManager.DoneParticle();
             
         }
     }
