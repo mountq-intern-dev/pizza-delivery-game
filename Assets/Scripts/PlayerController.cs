@@ -59,11 +59,11 @@ public class PlayerController : MonoBehaviour
     void SlowDown()
     {
         horizontalSpeed = 3.5f;
-        verticalSpeed = 2.5f;
+        verticalSpeed = 3.5f;
     }
     void Accelerate()
     {
         horizontalSpeed = 7f;
-        verticalSpeed = 5f;
+        verticalSpeed = 8f;
     }
 }

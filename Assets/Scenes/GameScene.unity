@@ -7208,6 +7208,7 @@ MonoBehaviour:
   - {fileID: 602880179}
   - {fileID: 1859658998}
   - {fileID: 1071830399}
+  pizzaCar: {fileID: 174182, guid: f8c20c6b3f45c054da38d190b8c20b44, type: 3}
 --- !u!4 &2104752641
 Transform:
   m_ObjectHideFlags: 0
