@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PizzaManager : MonoBehaviour
 {
+    Rigidbody pizzaAnchor;
     Stack<GameObject> pizzasOnCar = new Stack<GameObject>();
-    int pizzaCount = 0;
     int donePizza = 0;
     float pizzaLength = 0.04f;
     Transform pizzaLocation;
@@ -14,29 +14,31 @@ public class PizzaManager : MonoBehaviour
     public ParticleManager particleManager;
 	void Start()
     {
+        pizzaAnchor = GameObject.FindGameObjectWithTag("Anchor").GetComponent<Rigidbody>();
         pizzaLocation = GameObject.FindGameObjectWithTag("Player").transform.GetChild(0);
-
     }
 
   
     public void GetPizza()
     {
         SpawnPizza();
-        pizzaCount++;
-        uIManager.UpdatePizza(pizzaCount);
-        particleManager.PizzaParticle();
+        uIManager.UpdatePizza(pizzasOnCar.Count);
+		if (pizzasOnCar.Count < 11)
+		{
+            particleManager.PizzaParticle();
+        }
+        
     }
 
     public void DeliverPizza()
     {
         
-		if (pizzaCount > 0)
+		if (pizzasOnCar.Count > 0)
 		{
             donePizza++;
             GameObject pizzaToRemove = pizzasOnCar.Pop();
             pizzaToRemove.SetActive(false);
-            pizzaCount--;
-            uIManager.UpdatePizza(pizzaCount);
+            uIManager.UpdatePizza(pizzasOnCar.Count);
             uIManager.UpdateDonePizza(donePizza);
             particleManager.DoneParticle();
             
@@ -46,12 +48,23 @@ public class PizzaManager : MonoBehaviour
     void SpawnPizza()
     {
         GameObject createdPizza = ObjectPool.instance.GetObjectInPool();
-        Vector3 pizzaLoc = new Vector3(pizzaLocation.position.x, pizzaLocation.position.y + pizzaCount * pizzaLength, pizzaLocation.position.z);
-        pizzasOnCar.Push(createdPizza);
+        Vector3 pizzaLoc = new Vector3(pizzaLocation.position.x, pizzaLocation.position.y + pizzasOnCar.Count * pizzaLength, pizzaLocation.position.z);
+        
 
         if (createdPizza != null)
 		{
-            createdPizza.transform.parent = pizzaLocation.transform;
+			if (pizzasOnCar.Count == 0)
+			{
+                createdPizza.GetComponent<SpringJoint>().connectedBody = pizzaAnchor;
+
+            }
+			else
+			{
+                createdPizza.GetComponent<SpringJoint>().connectedBody = pizzasOnCar.Peek().GetComponent<Rigidbody>();
+
+            }
+            pizzasOnCar.Push(createdPizza);
+            createdPizza.transform.parent = pizzaLocation.transform;    
             createdPizza.transform.position = pizzaLoc;
             createdPizza.SetActive(true);
 		}

@@ -8,6 +8,7 @@ TagManager:
   - PizzaShop
   - TargetHouse
   - SlowZone
+  - Anchor
   layers:
   - Default
   - TransparentFX
